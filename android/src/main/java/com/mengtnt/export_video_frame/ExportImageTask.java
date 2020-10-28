@@ -161,7 +161,7 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
                     String key = String.format("%s%d", filePath, index);
                     imageExportPath = storage.filePathByKey(key);
                 } else {
-                    String fileName = String.format("%s%d", exportPrefix, index+1);
+                    String fileName = String.format("%s%d%s", exportPrefix, index+1, exportPrefix);
                     imageExportPath = storage.filePathByName(fileName);
                 }
                 storage.createFileByPath(imageExportPath,bitmap);

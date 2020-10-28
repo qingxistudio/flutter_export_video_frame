@@ -1,0 +1,34 @@
+PODS:
+  - export_video_frame (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - image_picker (0.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - export_video_frame (from `.symlinks/plugins/export_video_frame/ios`)
+  - Flutter (from `Flutter`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+
+EXTERNAL SOURCES:
+  export_video_frame:
+    :path: ".symlinks/plugins/export_video_frame/ios"
+  Flutter:
+    :path: Flutter
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+
+SPEC CHECKSUMS:
+  export_video_frame: cad94203962937a979d58b39ff4740473d276728
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3

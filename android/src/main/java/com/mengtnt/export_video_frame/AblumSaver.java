@@ -77,8 +77,8 @@ class AblumSaver {
         canvas.drawBitmap(watermark, matrix, paint);
         String name = String.format("%d%.5f",System.currentTimeMillis(),Math.random());
         String key = MD5.getStr(name);
-        FileStorage.share().createFile(key,bmp);
-        return FileStorage.share().filePath(key);
+        FileStorage.share().createFileByKey(key,bmp);
+        return FileStorage.share().filePathByKey(key);
 
     }
 

@@ -74,7 +74,7 @@ public class ExportVideoFramePlugin implements MethodCallHandler {
       case "cleanImageCache": {
 
         Boolean success = false;
-        String filePath = call.argument("dir").toString();
+        String filePath = call.argument("dir");
         if (filePath == null || filePath.length() == 0) {
           success = FileStorage.share().cleanCache();
         } else {
@@ -136,8 +136,8 @@ public class ExportVideoFramePlugin implements MethodCallHandler {
         Number number = call.argument("number");
         Number quality = call.argument("quality");
 
-        String exportDir = call.argument("exportDir").toString();
-        String exportPrefix = call.argument("exportPrefix").toString();
+        String exportDir = call.argument("exportDir");
+        String exportPrefix = call.argument("exportPrefix");
 
         ExportImageTask task = new ExportImageTask();
         task.execute(filePath,number.intValue(),quality,exportDir, exportPrefix);

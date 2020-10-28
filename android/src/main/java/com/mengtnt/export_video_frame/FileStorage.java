@@ -54,9 +54,6 @@ class FileStorage {
     }
 
     private FileStorage() {
-        String directoryName = "ExportImage";
-        File directory = getAlbumStorageDir(directoryName);
-        cacheDirectory = directory.getAbsolutePath();
     }
 
     public FileStorage(String directory) {
@@ -65,6 +62,7 @@ class FileStorage {
 
     void setContext(Context context) {
         this.context = context;
+        cacheDirectory = context.getDir("ExportImage", Context.MODE_PRIVATE).getAbsolutePath();
     }
 
     void createFileByKey(String key, Bitmap bitmapImage) {
@@ -106,6 +104,9 @@ class FileStorage {
     Boolean cleanCache() {
         File directory = new File(cacheDirectory);
         File[] files = directory.listFiles();
+        if (files == null) {
+            return true;
+        }
         Boolean success = true;
         for (File file : files){
             Boolean result = file.delete();

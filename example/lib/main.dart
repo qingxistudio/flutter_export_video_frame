@@ -1,6 +1,6 @@
 import 'dart:math';
-
-/** 
+import 'package:path_provider/path_provider.dart';
+/**
 MIT License
 
 Copyright (c) 2019 mengtnt
@@ -69,9 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
   var _isClean = false;
   Future _getImages() async {
     var file = await ImagePicker.pickVideo(source: ImageSource.gallery);
-    var images = await ExportVideoFrame.exportImage(file.path,10,0);
+    var exportDir = await getApplicationDocumentsDirectory();
+    var images = await ExportVideoFrame.exportImage(file.path,10,0,exportDir: '${exportDir.path}/ExportVideoExample', exportPrefix: "sample-photo_");
     var result = images.map((file) => Image.file(file)).toList();
     setState(() {
+      print(result);
       widget.images.addAll(result);
       _isClean = true;
     });
