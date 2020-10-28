@@ -24,11 +24,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
 
 SPEC CHECKSUMS:
-  export_video_frame: dbafa7c2b73a12ab277685634a3c90601abaed85
+  export_video_frame: cad94203962937a979d58b39ff4740473d276728
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
 
-PODFILE CHECKSUM: ebd43b443038e611b86ede96e613bd6033c49497
+PODFILE CHECKSUM: b02606947baaf3e07fcd71cb6f0c6149fcdf6bf2
 
 COCOAPODS: 1.9.3
