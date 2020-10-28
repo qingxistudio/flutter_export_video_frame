@@ -77,7 +77,7 @@ class ExportVideoFrame {
   ///    - filePath: file path of video
   ///    - number: export the number of frames
   ///    - quality: scale of export frame."0" is lowest,"1" is origin.("0" is scale for 0.1 in android) 
-  static Future<List<File>> exportImage(String filePath, int number,double quality) async {
+  static Future<List<File>> exportImage(String filePath, int number, double quality) async {
     var para = {"filePath":filePath,"number":number,"quality":quality};
     final List<dynamic> list =
         await _channel.invokeMethod('exportImage', para);
