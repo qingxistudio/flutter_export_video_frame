@@ -67,6 +67,12 @@ public class FileStorage {
         try createDirectory()
     }
     
+    init(dirName:String) throws {
+        self.fileManager = FileManager.default
+        path = URL.init(fileURLWithPath: dirName).path
+        try createDirectory()
+    }
+    
     func createDirectory() throws {
         guard !fileManager.fileExists(atPath: path) else {
             return
@@ -75,9 +81,9 @@ public class FileStorage {
                                         attributes: nil)
     }
     
-    func createFile(_ name:String,content:Data?) -> Bool {
-        _ = removeFile(for: name)
-        let result = fileManager.createFile(atPath: filePath(for: name), contents: content, attributes: nil)
+    func createFile(byPath newPath:String, content:Data?) -> Bool {
+        _ = removeFile(newPath)
+        let result = fileManager.createFile(atPath: newPath, contents: content, attributes: nil)
         return result
     }
     
@@ -85,13 +91,17 @@ public class FileStorage {
         return key.md5()
     }
     
-    func filePath(for key: String) -> String {
-        return "\(path)/\(fileName(for: key))"
+    func filePath(for key: String, suffix: String?) -> String {
+        return "\(path)/\(fileName(for: key))\(suffix ?? "")"
+    }
+    
+    func filePath(forName fileName: String) -> String {
+        return "\(path)/\(fileName)"
     }
     
     public func searchFile(for key:String) -> URL? {
-        if fileManager.fileExists(atPath: filePath(for: key)){
-            return URL(fileURLWithPath: filePath(for: key))
+        if fileManager.fileExists(atPath: filePath(for: key, suffix: nil)){
+            return URL(fileURLWithPath: filePath(for: key, suffix: nil))
         }
         return nil
     }
@@ -105,8 +115,8 @@ public class FileStorage {
         }
     }
     
-    func removeFile(for key:String) -> Bool {
-        let url = URL(fileURLWithPath: filePath(for: key))
+    func removeFile(_ filePath:String) -> Bool {
+        let url = URL(fileURLWithPath: filePath)
         do {
             try fileManager.removeItem(at: url)
             return true
@@ -124,7 +134,7 @@ public class FileStorage {
     }
     
     func fileSize(key:String) -> UInt64 {
-        let path = filePath(for: key)
+        let path = filePath(for: key, suffix: nil)
         return fileSize(path:path)
     }
     

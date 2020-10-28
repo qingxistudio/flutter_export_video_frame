@@ -32,9 +32,9 @@ import android.util.Log;
 
 class FileStorage {
 
-    private String directoryName;
+    private String cacheDirectory;
     private Context context;
-    private boolean external;
+    private boolean external = false;
 
     private static FileStorage instance = new FileStorage();
 
@@ -54,18 +54,27 @@ class FileStorage {
     }
 
     private FileStorage() {
-        this.external = false;
-        this.directoryName = "ExportImage";
+        String directoryName = "ExportImage";
+        File directory = getAlbumStorageDir(directoryName);
+        cacheDirectory = directory.getAbsolutePath();
+    }
+
+    public FileStorage(String directory) {
+        cacheDirectory = directory;
     }
 
     void setContext(Context context) {
         this.context = context;
     }
 
-    void createFile(String key, Bitmap bitmapImage) {
+    void createFileByKey(String key, Bitmap bitmapImage) {
+        createFileByPath(getFileByName(fileName(key)).getAbsolutePath(), bitmapImage);
+    }
+
+    void createFileByPath(String path, Bitmap bitmapImage) {
         FileOutputStream fileOutputStream = null;
         try {
-            File file = getFile(fileName(key));
+            File file = new File(path);
             if (file.exists()) {
                 return;
             }
@@ -84,19 +93,18 @@ class FileStorage {
         }
     }
 
-    String filePath(String key) {
-        File file = getFile(fileName(key));
+    String filePathByKey(String key) {
+        File file = getFileByName(fileName(key));
+        return file.getAbsolutePath();
+    }
+
+    String filePathByName(String fileName) {
+        File file = getFileByName(fileName);
         return file.getAbsolutePath();
     }
 
     Boolean cleanCache() {
-        File directory;
-        if(external){
-            directory = getAlbumStorageDir(directoryName);
-        }
-        else {
-            directory = context.getDir(directoryName, Context.MODE_PRIVATE);
-        }
+        File directory = new File(cacheDirectory);
         File[] files = directory.listFiles();
         Boolean success = true;
         for (File file : files){
@@ -112,18 +120,11 @@ class FileStorage {
         return  MD5.getStr(key);
     }
 
-    private File getFile(String fileName) {
-        File directory;
-        if(external){
-            directory = getAlbumStorageDir(directoryName);
-        }
-        else {
-            directory = context.getDir(directoryName, Context.MODE_PRIVATE);
-        }
+    private File getFileByName(String fileName) {
+        File directory = new File(cacheDirectory);
         if(!directory.exists() && !directory.mkdirs()){
             Log.e("FileStorage","Error creating directory " + directory);
         }
-
         return new File(directory, fileName);
     }
 

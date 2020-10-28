@@ -56,7 +56,9 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
             if (number > 0) {
                 Number third = (Number) objects[2];
                 float quality = third.floatValue();
-                return  exportImageList(filePath,number,quality);
+                String exportDir = (String) objects[3];
+                String exportPrefix = (String)objects[4];
+                return  exportImageList(filePath,number,quality,exportDir,exportPrefix);
             }
         } else if (param instanceof Long) {
             Long duration = (Long)param;
@@ -84,8 +86,8 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
             int index = 0;
             for (GifDecoder.GifFrame frame:frames) {
                 String key = String.format("%s%d%.1f", filePath, index,quality);
-                FileStorage.share().createFile(key,frame.image);
-                result.add(FileStorage.share().filePath(key));
+                FileStorage.share().createFileByKey(key,frame.image);
+                result.add(FileStorage.share().filePathByKey(key));
                 index ++;
             }
         } catch (FileNotFoundException e) {
@@ -112,8 +114,8 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
 
             Bitmap bitmap = Bitmap.createBitmap(bmpOriginal, 0,0,bmpVideoWidth, bmpVideoHeight, m,false);
             String key = String.format("%s%d%.4f", filePath, duration,radian);
-            FileStorage.share().createFile(key,bitmap);
-            result = FileStorage.share().filePath(key);
+            FileStorage.share().createFileByKey(key,bitmap);
+            result = FileStorage.share().filePathByKey(key);
         } catch (Exception e) {
             Log.e("Media read error",e.toString());
         }
@@ -121,7 +123,7 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
         return result;
     }
 
-    protected ArrayList<String> exportImageList(String filePath,int number,float quality) {
+    protected ArrayList<String> exportImageList(String filePath,int number,float quality, String exportDir, String exportPrefix) {
         ArrayList result = new ArrayList(number);
         float scale = (float)0.1;
         if (quality > 0.1) {
@@ -147,10 +149,23 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
                 if (scale < 1.0) {
                     m.setScale(scale, scale);
                 }
+                FileStorage storage;
+                if (exportDir == null) {
+                    storage = FileStorage.share();
+                } else {
+                    storage = new FileStorage(exportDir);
+                }
                 Bitmap bitmap = Bitmap.createBitmap(bmpOriginal, 0, 0, bmpVideoWidth, bmpVideoHeight, m, false);
-                String key = String.format("%s%d", filePath, index);
-                FileStorage.share().createFile(key,bitmap);
-                result.add(FileStorage.share().filePath(key));
+                String imageExportPath;
+                if (exportPrefix == null || exportPrefix.length() == 0) {
+                    String key = String.format("%s%d", filePath, index);
+                    imageExportPath = storage.filePathByKey(key);
+                } else {
+                    String fileName = String.format("%s%d", exportPrefix, index+1);
+                    imageExportPath = storage.filePathByName(fileName);
+                }
+                storage.createFileByPath(imageExportPath,bitmap);
+                result.add(imageExportPath);
             }
         } catch (Exception e) {
             Log.e("Media read error",e.toString());

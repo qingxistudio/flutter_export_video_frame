@@ -40,7 +40,12 @@ public class SwiftExportVideoFramePlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "cleanImageCache":
             do {
-                try FileStorage.share?.cleanAllFile()
+                if let argument = call.arguments as? [String:Any]
+                   , let exportDir = argument["dir"] as? String {
+                    try FileStorage(dirName: exportDir).cleanAllFile()
+                } else {
+                    try FileStorage.share?.cleanAllFile()
+                }
                 result("success")
             } catch {
                 result(error.localizedDescription)
@@ -62,8 +67,16 @@ public class SwiftExportVideoFramePlugin: NSObject, FlutterPlugin {
                 let filePath = argument["filePath"] as? String,
                 let number = argument["number"] as? Int,
                 let quality = argument["quality"] as? Double {
+                let exportDirParam = argument["exportDir"] as? String
+                let exportPrefixParam = argument["exportPrefix"] as? String
+                let exportDir = (exportDirParam == nil || exportDirParam!.isEmpty) ? nil : exportDirParam
+                let exportPrefix = (exportPrefixParam == nil || exportPrefixParam!.isEmpty) ? nil : exportPrefixParam
                 DispatchQueue.global(qos: .background).async {
-                    ExportManager.exportImagePathList(filePath, number: number,quality: quality) { (originImgList) in
+                    ExportManager.exportImagePathList(filePath,
+                                                      exportDir: exportDir,
+                                                      exportPrefix: exportPrefix,
+                                                      number: number,
+                                                      quality: quality) { (originImgList) in
                         result(originImgList)
                     }
                 }
@@ -74,10 +87,11 @@ public class SwiftExportVideoFramePlugin: NSObject, FlutterPlugin {
         case "exportImageBySeconds":
             if let argument = call.arguments as? [String:Any],
                 let filePath = argument["filePath"] as? String,
+                let exportDir = argument["exportDir"] as? String,
                 let milli = argument["duration"] as? Int,
                 let radian = argument["radian"] as? Double {
                 DispatchQueue.global(qos: .background).async {
-                    if let originImg = ExportManager.exportImagePathBySecond(filePath, milli: milli,radian: CGFloat(radian)) {
+                    if let originImg = ExportManager.exportImagePathBySecond(filePath, exportDir: exportDir, milli: milli,radian: CGFloat(radian)) {
                         result(originImg)
                     } else {
                         result("")
