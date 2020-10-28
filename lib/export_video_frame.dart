@@ -32,8 +32,9 @@ class ExportVideoFrame {
       const MethodChannel('export_video_frame');
 
   /// Returns whether clean success
-  static Future<bool> cleanImageCache() async {
-    final String result = await _channel.invokeMethod('cleanImageCache');
+  static Future<bool> cleanImageCache({String dir}) async {
+    Map<String,dynamic> para = {"dir":dir};
+    final String result = await _channel.invokeMethod('cleanImageCache', para);
     if (result == "success") {
       return true;
     }
@@ -76,9 +77,11 @@ class ExportVideoFrame {
   /// - parameters:
   ///    - filePath: file path of video
   ///    - number: export the number of frames
-  ///    - quality: scale of export frame."0" is lowest,"1" is origin.("0" is scale for 0.1 in android) 
-  static Future<List<File>> exportImage(String filePath, int number,double quality) async {
-    var para = {"filePath":filePath,"number":number,"quality":quality};
+  ///    - quality: scale of export frame."0" is lowest,"1" is origin.("0" is scale for 0.1 in android)
+  ///    - [exportDir]: directory to export images
+  ///    - [exportPrefix]: exportPrefix = 'photo123_', the output files will be photo123_1.jpg, photo123_2.jpg,...
+  static Future<List<File>> exportImage(String filePath, int number, double quality, {String exportDir, String exportPrefix}) async {
+    var para = {"filePath":filePath,"number":number,"quality":quality, "exportDir": exportDir, "exportPrefix": exportPrefix};
     final List<dynamic> list =
         await _channel.invokeMethod('exportImage', para);
     var result = list

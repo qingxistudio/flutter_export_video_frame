@@ -28,8 +28,8 @@ import Photos
 
 class ExportManager {
     
-    static func exportImagePathBySecond(_ filePath: String,milli:Int,radian:CGFloat) -> String? {
-        let fileUrl = URL(fileURLWithPath: filePath)
+  static func exportImagePathBySecond(_ videoPath:String, exportDir:String?, milli:Int, radian:CGFloat) -> String? {
+        let fileUrl = URL(fileURLWithPath: videoPath)
         let asset = AVURLAsset(url: fileUrl)
         let timeScale = asset.duration.timescale
         let current = Double(milli) / 1000.0
@@ -44,9 +44,13 @@ class ExportManager {
             let img = UIImage(cgImage: imageRef).imageByRotate(radius: -radian),
             let data = img.jpegData(compressionQuality: 1.0) {
             let radianPrecision = String(format: "%.4f", radian)
-            let name = "\(filePath)+\(actualTime.value)" + radianPrecision
-            if let filePath = FileStorage.share?.filePath(for: name),
-                let result = FileStorage.share?.createFile(name, content: data),result {
+            let nameKey = "\(videoPath)+\(actualTime.value)" + radianPrecision
+            
+            let fileStorage = exportDir == nil ? FileStorage.share : try? FileStorage(dirName: exportDir!)
+            if let filePath = fileStorage?.filePath(for: nameKey, suffix: ".jpg")
+               ,let result = fileStorage?.createFile(byPath: filePath, content: data)
+               ,result
+            {
                 return filePath
             }
         }
@@ -78,9 +82,9 @@ class ExportManager {
                 if let imageRef = CGImageSourceCreateImageAtIndex(source,index,nil),
                     let image = UIImage(cgImage: imageRef).jpegData(compressionQuality: CGFloat(quality)) {
                     let precision = String(format: "%.3f", totalTime)
-                    let name = "\(filePath)+\(precision)"
-                    if let filePath = FileStorage.share?.filePath(for: name),
-                        let result = FileStorage.share?.createFile(name, content: image),result {
+                    let nameKey = "\(filePath)+\(precision)"
+                    if let filePath = FileStorage.share?.filePath(for: nameKey, suffix: nil),
+                       let result = FileStorage.share?.createFile(byPath: filePath, content: image),result {
                         imagePaths.append(filePath)
                     }
                 }
@@ -89,8 +93,13 @@ class ExportManager {
         return imagePaths
     }
     
-    static func exportImagePathList(_ filePath: String,number:Int,quality:Double,complete:@escaping (([String]) -> Void)) {
-        let fileUrl = URL(fileURLWithPath: filePath)
+    static func exportImagePathList(_ videoPath: String,
+                                    exportDir:String?,
+                                    exportPrefix: String?,
+                                    number:Int,
+                                    quality:Double,
+                                    complete:@escaping (([String]) -> Void)) {
+        let fileUrl = URL(fileURLWithPath: videoPath)
         let asset = AVURLAsset(url: fileUrl)
         var imageList = [String]()
         var times = [NSValue]()
@@ -119,9 +128,20 @@ class ExportManager {
             if result == .succeeded,
                 let imageRef = imageRef,
                 let image = UIImage(cgImage: imageRef).jpegData(compressionQuality: CGFloat(quality))  {
-                let name = "\(filePath)+\(time.value)"
-                if let filePath = FileStorage.share?.filePath(for: name),
-                    let result = FileStorage.share?.createFile(name, content: image),result {
+                let imageExt = ".jpg"
+                let fileStorage = (exportDir == nil || exportDir!.isEmpty) ? FileStorage.share : try? FileStorage(dirName: exportDir!)
+                var filePath: String?
+                if let exportPrefix = exportPrefix, !exportPrefix.isEmpty {
+                    let fileName = "\(exportPrefix)\(timesCount)\(imageExt)"
+                    filePath = fileStorage?.filePath(forName: fileName)
+                } else {
+                    let nameKey = "\(videoPath)+\(time.value)"
+                    filePath = fileStorage?.filePath(for: nameKey, suffix: imageExt)
+                }
+                if let filePath = filePath
+                   ,let result = fileStorage?.createFile(byPath: filePath, content: image)
+                   ,result
+                {
                     imageList.append(filePath)
                 }
             }
