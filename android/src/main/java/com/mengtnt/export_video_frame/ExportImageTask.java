@@ -108,11 +108,14 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
             int bmpVideoHeight = bmpOriginal.getHeight();
             int bmpVideoWidth = bmpOriginal.getWidth();
 
-            Matrix m = new Matrix();
-            float degrees = (float) (radian * 180 / Math.PI);
-            m.postRotate(degrees);
+            Bitmap bitmap = bmpOriginal;
 
-            Bitmap bitmap = Bitmap.createBitmap(bmpOriginal, 0,0,bmpVideoWidth, bmpVideoHeight, m,false);
+            if (radian != 0) {
+                Matrix m = new Matrix();
+                float degrees = (float) (radian * 180 / Math.PI);
+                m.postRotate(degrees);
+                bitmap = Bitmap.createBitmap(bmpOriginal, 0,0,bmpVideoWidth, bmpVideoHeight, m,false);
+            }
             String key = String.format("%s%d%.4f", filePath, duration,radian);
             FileStorage.share().createFileByKey(key,bitmap);
             result = FileStorage.share().filePathByKey(key);
@@ -146,16 +149,19 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
                 int bmpVideoHeight = bmpOriginal.getHeight() ;
                 int bmpVideoWidth = bmpOriginal.getWidth();
                 Matrix m = new Matrix();
+                Bitmap bitmap = bmpOriginal;
                 if (scale < 1.0) {
                     m.setScale(scale, scale);
+                    bitmap = Bitmap.createBitmap(bmpOriginal, 0, 0, bmpVideoWidth, bmpVideoHeight, m, false);
                 }
+
                 FileStorage storage;
                 if (exportDir == null) {
                     storage = FileStorage.share();
                 } else {
                     storage = new FileStorage(exportDir);
                 }
-                Bitmap bitmap = Bitmap.createBitmap(bmpOriginal, 0, 0, bmpVideoWidth, bmpVideoHeight, m, false);
+
                 String imageExportPath;
                 if (exportPrefix == null || exportPrefix.length() == 0) {
                     String key = String.format("%s%d", filePath, index);
