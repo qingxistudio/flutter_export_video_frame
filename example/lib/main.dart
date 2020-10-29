@@ -70,7 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future _getImages() async {
     var file = await ImagePicker.pickVideo(source: ImageSource.gallery);
     var exportDir = await getApplicationDocumentsDirectory();
-    var images = await ExportVideoFrame.exportImage(file.path,10,0,exportDir: '${exportDir.path}/ExportVideoExample', exportPrefix: "sample-photo_");
+    final count = 10;
+    final imgScale = 0.5;
+    var images = await ExportVideoFrame.exportImage(file.path,count,imgScale,exportDir: '${exportDir.path}/ExportVideoExample', exportPrefix: "sample-photo_");
     var result = images.map((file) => Image.file(file)).toList();
     setState(() {
       print(result);

@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af37d020-4900-4f31-947a-b06bd5db640f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/AblumSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/AblumSaver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/ExportImageTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/ExportImageTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/FileStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/mengtnt/export_video_frame/FileStorage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/example/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/export_video_frame.iml" beforeDir="false" afterPath="$PROJECT_DIR$/export_video_frame.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Flutter/.last_build_id" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Flutter/.last_build_id" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +30,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
@@ -69,9 +71,29 @@
       <screen x="45" y="23" width="1395" height="877" />
     </state>
     <state x="484" y="258" key="#com.intellij.ide.util.TreeFileChooserDialog/45.23.1395.877@45.23.1395.877" timestamp="1603894529468" />
+    <state width="1353" height="231" key="GridCell.Tab.0.bottom" timestamp="1603951324857">
+      <screen x="45" y="23" width="1395" height="877" />
+    </state>
+    <state width="1353" height="231" key="GridCell.Tab.0.bottom/45.23.1395.877@45.23.1395.877" timestamp="1603951324857" />
+    <state width="1353" height="231" key="GridCell.Tab.0.center" timestamp="1603951324857">
+      <screen x="45" y="23" width="1395" height="877" />
+    </state>
+    <state width="1353" height="231" key="GridCell.Tab.0.center/45.23.1395.877@45.23.1395.877" timestamp="1603951324857" />
+    <state width="1353" height="231" key="GridCell.Tab.0.left" timestamp="1603951324856">
+      <screen x="45" y="23" width="1395" height="877" />
+    </state>
+    <state width="1353" height="231" key="GridCell.Tab.0.left/45.23.1395.877@45.23.1395.877" timestamp="1603951324856" />
+    <state width="1353" height="231" key="GridCell.Tab.0.right" timestamp="1603951324857">
+      <screen x="45" y="23" width="1395" height="877" />
+    </state>
+    <state width="1353" height="231" key="GridCell.Tab.0.right/45.23.1395.877@45.23.1395.877" timestamp="1603951324857" />
     <state x="251" y="100" key="SettingsEditor" timestamp="1603948037988">
       <screen x="45" y="23" width="1395" height="877" />
     </state>
     <state x="251" y="100" key="SettingsEditor/45.23.1395.877@45.23.1395.877" timestamp="1603948037988" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1603950298651">
+      <screen x="45" y="23" width="1395" height="877" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/45.23.1395.877@45.23.1395.877" timestamp="1603950298651" />
   </component>
 </project>

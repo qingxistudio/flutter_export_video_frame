@@ -65,11 +65,11 @@ class FileStorage {
         cacheDirectory = context.getDir("ExportImage", Context.MODE_PRIVATE).getAbsolutePath();
     }
 
-    void createFileByKey(String key, Bitmap bitmapImage) {
-        createFileByPath(getFileByName(fileName(key)).getAbsolutePath(), bitmapImage);
+    void createFileByKey(String key, Bitmap bitmapImage, Bitmap.CompressFormat format) {
+        createFileByPath(getFileByName(fileName(key)).getAbsolutePath(), bitmapImage, format);
     }
 
-    void createFileByPath(String path, Bitmap bitmapImage) {
+    void createFileByPath(String path, Bitmap bitmapImage, Bitmap.CompressFormat format) {
         FileOutputStream fileOutputStream = null;
         try {
             File file = new File(path);

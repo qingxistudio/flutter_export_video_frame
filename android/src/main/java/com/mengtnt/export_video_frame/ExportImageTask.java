@@ -86,7 +86,7 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
             int index = 0;
             for (GifDecoder.GifFrame frame:frames) {
                 String key = String.format("%s%d%.1f", filePath, index,quality);
-                FileStorage.share().createFileByKey(key,frame.image);
+                FileStorage.share().createFileByKey(key,frame.image, Bitmap.CompressFormat.PNG);
                 result.add(FileStorage.share().filePathByKey(key));
                 index ++;
             }
@@ -117,7 +117,7 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
                 bitmap = Bitmap.createBitmap(bmpOriginal, 0,0,bmpVideoWidth, bmpVideoHeight, m,false);
             }
             String key = String.format("%s%d%.4f", filePath, duration,radian);
-            FileStorage.share().createFileByKey(key,bitmap);
+            FileStorage.share().createFileByKey(key,bitmap,Bitmap.CompressFormat.JPEG);
             result = FileStorage.share().filePathByKey(key);
         } catch (Exception e) {
             Log.e("Media read error",e.toString());
@@ -138,21 +138,43 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
             mediaMetadataRetriever.setDataSource(filePath);
             String METADATA_KEY_DURATION = mediaMetadataRetriever
                     .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            String metaRotation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+            int rotation = metaRotation == null ? 0 : Integer.parseInt(metaRotation);
+            int rawVideoWidth = Integer.valueOf(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            int rawVideoHeight = Integer.valueOf(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+
+            int rotatedVideoWidth;
+            int rotatedVideoHeight;
+            if (rotation == 90 || rotation == 270) {
+                rotatedVideoWidth = rawVideoHeight;
+                rotatedVideoHeight = rawVideoWidth;
+            } else {
+                rotatedVideoWidth = rawVideoWidth;
+                rotatedVideoHeight = rawVideoHeight;
+            }
+//            int videoHeight = ;
             int max = (int) Long.parseLong(METADATA_KEY_DURATION);
             int step = max / number;
 
             for ( int index = 0 ; index < max ; index = index+step ) {
-                Bitmap bmpOriginal = mediaMetadataRetriever.getFrameAtTime(index * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-                if (bmpOriginal == null) {
-                    continue;
-                }
-                int bmpVideoHeight = bmpOriginal.getHeight() ;
-                int bmpVideoWidth = bmpOriginal.getWidth();
-                Matrix m = new Matrix();
-                Bitmap bitmap = bmpOriginal;
-                if (scale < 1.0) {
-                    m.setScale(scale, scale);
-                    bitmap = Bitmap.createBitmap(bmpOriginal, 0, 0, bmpVideoWidth, bmpVideoHeight, m, false);
+                Bitmap bitmap;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1 && rotatedVideoWidth > 0) {
+                    int dstWidth = (int) (rotatedVideoWidth * scale);
+                    int dstHeight = (int) (rotatedVideoHeight * scale);
+                    bitmap = mediaMetadataRetriever.getScaledFrameAtTime(index * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC,dstWidth,dstHeight);
+                } else {
+                    Bitmap bmpOriginal = mediaMetadataRetriever.getFrameAtTime(index * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                    if (bmpOriginal == null) {
+                        continue;
+                    }
+                    int bmpVideoHeight = bmpOriginal.getHeight() ;
+                    int bmpVideoWidth = bmpOriginal.getWidth();
+                    Matrix m = new Matrix();
+                    bitmap = bmpOriginal;
+                    if (scale < 1.0) {
+                        m.setScale(scale, scale);
+                        bitmap = Bitmap.createBitmap(bmpOriginal, 0, 0, bmpVideoWidth, bmpVideoHeight, m, false);
+                    }
                 }
 
                 FileStorage storage;
@@ -167,10 +189,10 @@ final class ExportImageTask extends AsyncTask<Object,Void,ArrayList<String>> {
                     String key = String.format("%s%d", filePath, index);
                     imageExportPath = storage.filePathByKey(key);
                 } else {
-                    String fileName = String.format("%s%d%s", exportPrefix, index+1, exportPrefix);
+                    String fileName = String.format("%s%d%s", exportPrefix, index+1, ".jpg");
                     imageExportPath = storage.filePathByName(fileName);
                 }
-                storage.createFileByPath(imageExportPath,bitmap);
+                storage.createFileByPath(imageExportPath,bitmap, Bitmap.CompressFormat.JPEG);
                 result.add(imageExportPath);
             }
         } catch (Exception e) {
